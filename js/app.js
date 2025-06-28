@@ -1,4 +1,5 @@
 const buttonsContainer = document.querySelector('.buttons-container')
+const hoverAudio = document.querySelector('.button-hover-audio')
 
 const maxStage = 3
 
@@ -30,6 +31,15 @@ const initiateBoard = () => {
     fillButtonsContainer()
 }
 
+const handleHover = event => {
+    if (event.target.dataset.stage) {
+        hoverAudio.play()
+    }
+    console.log(event)
+}
+
+buttonsContainer.addEventListener('mouseover', handleHover)
+
 initiateBoard()
 
-console.log(buttonsContainer)
+console.log(hoverAudio)

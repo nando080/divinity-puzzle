@@ -34,7 +34,7 @@ body {
     background-size: cover;
     border-radius: 9%;
     cursor: pointer;
-    transition: .35s ease-in-out;
+    transition: .4s ease-in-out;
 }
 
 .button:hover {
