@@ -27,18 +27,17 @@ const generateButton = (row, column) => {
 }
 
 const fillGameBoard = () => {
-    winnerCombination.forEach(row => {
-        const currentRow = []
-        row.forEach(column => {
-            currentRow.push({
+    for (let row = 0; row < winnerCombination.length; row++) {
+        const newRow = []
+        for (let column = 0; column < winnerCombination[0].length; column++) {
+            newRow.push({
                 stage: 0,
                 isActive: false,
                 button: generateButton(row, column)
             })
-        })
-        gameBoard.push(currentRow)
-    })
-    console.log(gameBoard)
+        }
+        gameBoard.push(newRow)
+    }
 }
 
 const insertGameBoardIntoDom = () => {
@@ -72,12 +71,61 @@ const handleSoundButtonClick = () => {
 const targetIsAButton = target => target.dataset.row ? true : false
 
 const handleMouseOver = event => {
+    const targetElement = event.target
+    if (targetIsAButton(targetElement)) {
+        if (isSoundOn) {
+            playSound(hoverAudio)
+        }
+    }
 }
 
-const handleMouseOut = () => {
+const handleMouseOut = event => {
+    const targetElement = event.target
+     if (targetIsAButton(targetElement)) {
+        if (isSoundOn) {
+            playSound(hoverAudio)
+        }
+    }
+}
+
+const getAdjacentAdresses = (row, column) => {
+    const adresses = []
+    // Rows
+    if (row === 0) {
+        adresses.push( [ row + 1, column ] )
+    } else if (row === winnerCombination.length - 1) {
+        adresses.push( [ row - 1, column ] )
+    } else {
+        adresses.push( [ row - 1, column ] )
+        adresses.push( [ row + 1, column ] )
+    }
+    // Columns
+    if (column === 0) {
+        adresses.push( [ row, column + 1 ] )
+    } else if (column === winnerCombination[0].length) {
+        adresses.push( [ row, column - 1 ] )
+    } else {
+        adresses.push( [ row, column - 1 ] )
+        adresses.push( [ row, column + 1 ] )
+    }
+    return adresses
+}
+
+const switchCellActivation = (row, column) => {
+    const cellIsActive = gameBoard[row][column].isActive
+    gameBoard[row][column].isActive = cellIsActive ? false : true
 }
 
 const handleClick = event => {
+    const targetElement = event.target
+    const targetRow = Number(targetElement.dataset.row)
+    const targetColumn = Number(targetElement.dataset.column)
+    if (targetIsAButton(targetElement)) {
+        if (isSoundOn) {
+            playSound(clickAudio)
+        }
+        switchCellActivation(targetRow, targetColumn)
+    }
 }
 
 window.addEventListener('keypress', event => {
