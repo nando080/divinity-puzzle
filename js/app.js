@@ -1,8 +1,12 @@
 const startScreen = document.querySelector('.start-screen')
+const soundConfigButton = document.querySelector('sound-config')
 const buttonsContainer = document.querySelector('.buttons-container')
 const hoverAudio = document.querySelector('.button-hover-audio')
 
+
 const maxStage = 3
+
+let isSoundOn = true
 
 const gameBoard = [
     [0, 0, 0, 0],
@@ -46,7 +50,7 @@ const playSound = sound => {
 const handleMouseOver = event => {
     const mouseTarget = event.target
     const isAButton = mouseTarget.dataset.stage
-    if (isAButton) {
+    if (isAButton  && isSoundOn) {
         playSound(hoverAudio)
     }
 }
@@ -56,9 +60,9 @@ const handleMouseOut = () => playSound(hoverAudio)
 const handleClick = event => {}
 
 window.addEventListener('keypress', event => {
-    const isStartScreenActive = startScreen.classList.contains('is-active')
+    const isStartScreenActive = startScreen.classList.contains('flex-center')
     if(isStartScreenActive) {
-        startScreen.classList.remove('is-active')
+        startScreen.classList.remove('flex-center')
     }
 })
 
