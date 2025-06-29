@@ -187,8 +187,8 @@ const handleClick = event => {
     const targetElement = event.target
     const targetRow = Number(targetElement.dataset.row)
     const targetColumn = Number(targetElement.dataset.column)
-    const targetIsActive = gameBoard[targetRow][targetColumn].isActive
     if (targetIsAButton(targetElement)) {
+        const targetIsActive = gameBoard[targetRow][targetColumn].isActive
         if (isSoundOn) {
             playSound(clickAudio)
         }
