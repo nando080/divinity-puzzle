@@ -1,3 +1,4 @@
+const startScreen = document.querySelector('.start-screen')
 const buttonsContainer = document.querySelector('.buttons-container')
 const hoverAudio = document.querySelector('.button-hover-audio')
 
@@ -53,6 +54,13 @@ const handleMouseOver = event => {
 const handleMouseOut = () => playSound(hoverAudio)
 
 const handleClick = event => {}
+
+window.addEventListener('keypress', event => {
+    const isStartScreenActive = startScreen.classList.contains('is-active')
+    if(isStartScreenActive) {
+        startScreen.classList.remove('is-active')
+    }
+})
 
 buttonsContainer.addEventListener('mouseover', handleMouseOver)
 buttonsContainer.addEventListener('mouseout', handleMouseOut)
