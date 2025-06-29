@@ -17,19 +17,28 @@ const winnerCombination = [
     [1, 2, 1, 2],
     [0, 1, 1, 1]
 ]
+const testCombination = [
+    [0, 2, 1, 2],
+    [1, 2, 3, 1],
+    [1, 2, 1, 2],
+    [0, 1, 1, 1]
+]
+
+const maxBoardRows = winnerCombination.length
+const maxBoardColumns = winnerCombination[0].length
 
 const generateButton = (row, column) => {
     const newButton = document.createElement('button')
-    newButton.setAttribute('class', 'button button--stage-0 is-active')
+    newButton.setAttribute('class', 'button button--stage-0')
     newButton.dataset.row = row
     newButton.dataset.column = column
     return newButton
 }
 
 const fillGameBoard = () => {
-    for (let row = 0; row < winnerCombination.length; row++) {
+    for (let row = 0; row < maxBoardRows; row++) {
         const newRow = []
-        for (let column = 0; column < winnerCombination[0].length; column++) {
+        for (let column = 0; column < maxBoardColumns; column++) {
             newRow.push({
                 stage: 0,
                 isActive: false,
@@ -93,7 +102,7 @@ const getAdjacentAdresses = (row, column) => {
     // Rows
     if (row === 0) {
         adresses.push( [ row + 1, column ] )
-    } else if (row === winnerCombination.length - 1) {
+    } else if (row === maxBoardRows - 1) {
         adresses.push( [ row - 1, column ] )
     } else {
         adresses.push( [ row - 1, column ] )
@@ -102,7 +111,7 @@ const getAdjacentAdresses = (row, column) => {
     // Columns
     if (column === 0) {
         adresses.push( [ row, column + 1 ] )
-    } else if (column === winnerCombination[0].length) {
+    } else if (column === maxBoardColumns - 1) {
         adresses.push( [ row, column - 1 ] )
     } else {
         adresses.push( [ row, column - 1 ] )
@@ -113,18 +122,84 @@ const getAdjacentAdresses = (row, column) => {
 
 const switchCellActivation = (row, column) => {
     const cellIsActive = gameBoard[row][column].isActive
-    gameBoard[row][column].isActive = cellIsActive ? false : true
+    if (cellIsActive) {
+        gameBoard[row][column].isActive = false
+        return
+    }
+    gameBoard[row][column].isActive = true
+}
+
+const updateCellStage = (row, column, operation='increase') => {
+    const currentStageValue = gameBoard[row][column].stage
+    const maxStage = maxBoardColumns - 1
+    if (operation === 'increase') {
+        if (currentStageValue < maxStage) {
+            gameBoard[row][column].stage += 1
+        }
+    }
+    if (operation === 'decrease') {
+        if (currentStageValue > 0) {
+            gameBoard[row][column].stage -= 1
+        }
+    }
+}
+
+const updateCellAndAdjacentStages = (row, column, operation) => {
+    const adjacents = getAdjacentAdresses(row, column)
+    updateCellStage(row, column, operation)
+    adjacents.forEach(adress => {
+        updateCellStage(adress[0], adress[1], operation)
+    })
+    console.log(gameBoard)
+}
+
+const updateCellAppearence = (row, column) => {
+    const cellButton = gameBoard[row][column].button
+    const currentCellStage = gameBoard[row][column].stage
+    const currentCellIsActive = gameBoard[row][column].isActive
+    cellButton.setAttribute('class', `button button--stage-${currentCellStage}`)
+    if (currentCellIsActive) {
+        cellButton.classList.add('button--active')
+    }
+}
+
+const updateCellAndAdjacentAppearences = (row, column) => {
+    const adjacents = getAdjacentAdresses(row, column)
+    updateCellAppearence(row, column)
+    adjacents.forEach(adress => {
+        updateCellAppearence(adress[0], adress[1])
+    })
+}
+
+const hasPlayerWon = () => {
+    let hasWon = true
+    winnerCombination.forEach((row, rowIndex) => {
+        row.forEach((item, columnIndex) => {
+            if (item !== gameBoard[rowIndex][columnIndex]) {
+                hasWon = false
+            }
+        })
+    })
+    return hasWon
 }
 
 const handleClick = event => {
     const targetElement = event.target
     const targetRow = Number(targetElement.dataset.row)
     const targetColumn = Number(targetElement.dataset.column)
+    const targetIsActive = gameBoard[targetRow][targetColumn].isActive
     if (targetIsAButton(targetElement)) {
         if (isSoundOn) {
             playSound(clickAudio)
         }
+        if (targetIsActive) {
+            updateCellAndAdjacentStages(targetRow, targetColumn, 'decrease')
+        } else {
+            updateCellAndAdjacentStages(targetRow, targetColumn)
+        }
         switchCellActivation(targetRow, targetColumn)
+        updateCellAndAdjacentAppearences(targetRow, targetColumn)
+        console.log(hasPlayerWon())
     }
 }
 
