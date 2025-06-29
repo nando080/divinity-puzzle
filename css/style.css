@@ -22,6 +22,7 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    position: relative;
     background-color: gray;
     background-image: url("../assets/img/ground-pattern.jpg");
 }
@@ -98,6 +99,32 @@ body {
 }
 
 /* Sound Button */
+
+.sound-config-container {
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .45);
+    border-radius: .65rem .65rem 0 0;
+}
+
+.sound-config-container:hover {
+    background-color: rgba(0, 0, 0, .65);
+}
+
+.sound-config {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    padding: .5em 2em;
+}
+
+.sound-config:hover {
+    scale: .95;
+}
+
+.sound-config img {
+    width: 1.75rem;
+}
 
 /* Victory Screen */
 .victory-screen {
