@@ -2,22 +2,18 @@ const startScreen = document.querySelector('.start-screen')
 const buttonsContainer = document.querySelector('.buttons-container')
 const soundConfigButton = document.querySelector('.sound-config')
 const soundButtonImg = document.querySelector('.sound-config img')
+const victoryScreen = document.querySelector('.victory-screen')
 
 const hoverAudio = new Audio('../assets/audio/sfx/hover.mp3')
 const clickAudio = new Audio('../assets/audio/sfx/click.mp3')
 const soundButtonAudio = new Audio('../assets/audio/sfx/sound-button.mp3')
+const doorsSound = new Audio('../assets/audio/sfx/doors.mp3')
 
 let isSoundOn = true
 
 const gameBoard = []
 
 const winnerCombination = [
-    [0, 2, 1, 2],
-    [1, 2, 3, 1],
-    [1, 2, 1, 2],
-    [0, 1, 1, 1]
-]
-const testCombination = [
     [0, 2, 1, 2],
     [1, 2, 3, 1],
     [1, 2, 1, 2],
@@ -150,7 +146,6 @@ const updateCellAndAdjacentStages = (row, column, operation) => {
     adjacents.forEach(adress => {
         updateCellStage(adress[0], adress[1], operation)
     })
-    console.log(gameBoard)
 }
 
 const updateCellAppearence = (row, column) => {
@@ -175,12 +170,26 @@ const hasPlayerWon = () => {
     let hasWon = true
     winnerCombination.forEach((row, rowIndex) => {
         row.forEach((item, columnIndex) => {
-            if (item !== gameBoard[rowIndex][columnIndex]) {
+            if (item !== gameBoard[rowIndex][columnIndex].stage) {
                 hasWon = false
             }
         })
     })
+    console.log(hasWon)
     return hasWon
+}
+
+const showVictoryScreen = () => {
+    if (hasPlayerWon()) {
+        victoryScreen.classList.add('is-active')
+        const showTimer = setTimeout(() => {
+            victoryScreen.classList.remove('is-hidden')
+            buttonsContainer.classList.add('is-hidden')
+        }, 10)
+        const soundTimer = setTimeout(() => {
+            playSound(doorsSound)
+        },4900)
+    }
 }
 
 const handleClick = event => {
@@ -199,7 +208,7 @@ const handleClick = event => {
         }
         switchCellActivation(targetRow, targetColumn)
         updateCellAndAdjacentAppearences(targetRow, targetColumn)
-        console.log(hasPlayerWon())
+        showVictoryScreen()
     }
 }
 

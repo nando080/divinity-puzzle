@@ -43,6 +43,7 @@ body {
     grid-template-columns: repeat(4, 1fr);
     gap: 1.5%;
     z-index: 100;
+    transition: opacity 3s ease;
 }
 
 .button {
@@ -122,6 +123,58 @@ body {
 /* Victory Screen */
 .victory-screen {
     display: none;
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 1;
+    background-color: #1f201b;
+    position: absolute;
+    z-index: 200;
+    opacity: 1;
+    overflow: hidden;
+    transition: opacity 3s ease-in;
+}
+
+.victory-screen.is-active {
+    display: block;
+}
+
+.wall-frame {
+    width: 100%;
+    height: 100%;
+    z-index: 400;
+    position: absolute;
+}
+
+@keyframes left-door-animation {
+    from{right: 49.9%;}
+    to {right: 70%;}
+}
+
+@keyframes right-door-animation {
+    from{left: 49.9%;}
+    to {left: 70.5%;}
+}
+
+.left-door, .right-door {
+    position: absolute;
+    top: 16.5%;
+    z-index: 300;
+    animation-duration: 3s;
+    animation-delay: 5s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+.left-door {
+    height: 77.5%;
+    right: 49.9%;
+    animation-name: left-door-animation;
+}
+
+.right-door {
+    height: 77.5%;
+    left: 49.9%;
+    animation-name: right-door-animation;
 }
 
 /* Utilities */
@@ -129,4 +182,8 @@ body {
     display: flex !important;
     justify-content: center;
     align-items: center;
+}
+
+.is-hidden {
+    opacity: 0;
 }
