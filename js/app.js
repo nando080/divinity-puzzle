@@ -1,13 +1,15 @@
-const maxStage = 3
+const startScreen = document.querySelector('.start-screen')
+const buttonsContainer = document.querySelector('.buttons-container')
+const soundConfigButton = document.querySelector('.sound-config')
+const soundButtonImg = document.querySelector('.sound-config img')
+
+const hoverAudio = new Audio('../assets/audio/sfx/hover.mp3')
+const clickAudio = new Audio('../assets/audio/sfx/click.mp3')
+const soundButtonAudio = new Audio('../assets/audio/sfx/sound-button.mp3')
 
 let isSoundOn = true
 
-const gameBoard = [
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
-]
+const gameBoard = []
 
 const winnerCombination = [
     [0, 2, 1, 2],
@@ -16,38 +18,44 @@ const winnerCombination = [
     [0, 1, 1, 1]
 ]
 
-const updateBoard = (row, column, operation='increase') => {
-    const currentStage = gameBoard[row][column]
-    let newStage = currentStage
-    if (operation === 'increase') {
-        if (currentStage < maxStage) {
-            gameBoard[row][column] = ++newStage
-        }
-    }
-    if (operation === 'decrease') {
-        if (currentStage > 0) {
-            gameBoard[row][column] = --newStage
-        }
-    }
+const generateButton = (row, column) => {
+    const newButton = document.createElement('button')
+    newButton.setAttribute('class', 'button button--stage-0 is-active')
+    newButton.dataset.row = row
+    newButton.dataset.column = column
+    return newButton
 }
 
-const updateButtonStage = button => {
-    const buttonRow = button.dataset.row
-    const buttonColumn = button.dataset.column
-    button.dataset.stage = gameBoard[buttonRow][buttonColumn]
+const fillGameBoard = () => {
+    winnerCombination.forEach(row => {
+        const currentRow = []
+        row.forEach(column => {
+            currentRow.push({
+                stage: 0,
+                isActive: false,
+                button: generateButton(row, column)
+            })
+        })
+        gameBoard.push(currentRow)
+    })
+    console.log(gameBoard)
 }
 
-const switchButtonState = (button) => {
-    const isButtonPressed = button.dataset.state === 'enabled'
-    if (isButtonPressed) {
-        button.dataset.state = 'disenabled'
-        return
-    }
-    button.dataset.state = 'enabled'
+const insertGameBoardIntoDom = () => {
+    gameBoard.forEach(row => {
+        row.forEach(item => {
+            buttonsContainer.appendChild(item.button)
+        })
+    })
 }
 
 const playSound = sound => {
     sound.play()
+}
+
+const initiateBoard = () => {
+    fillGameBoard()
+    insertGameBoardIntoDom()
 }
 
 const handleSoundButtonClick = () => {
@@ -61,38 +69,15 @@ const handleSoundButtonClick = () => {
     playSound(soundButtonAudio)
 }
 
-const isElementButton = event => event.target.dataset.stage ? true : false
+const targetIsAButton = target => target.dataset.row ? true : false
 
 const handleMouseOver = event => {
-    if (isElementButton(event) && isSoundOn) {
-        playSound(hoverAudio)
-    }
 }
 
 const handleMouseOut = () => {
-    if (isSoundOn) {
-        playSound(hoverAudio)
-    }
 }
 
 const handleClick = event => {
-    if (isElementButton(event)) {
-        if (isSoundOn) {
-            playSound(clickAudio)
-        }
-        const currentButton = event.target
-        const buttonRow = currentButton.dataset.row
-        const buttonColumn = currentButton.dataset.column
-        const isButtonPressed = currentButton.dataset.state === 'enabled'
-        if (isButtonPressed) {
-            updateBoard(buttonRow, buttonColumn, 'decrease')
-        } else {
-            updateBoard(buttonRow, buttonColumn)
-        }
-        switchButtonState(currentButton)
-        updateButtonStage(currentButton)
-        console.log(currentButton, gameBoard.flat(1))
-    }
 }
 
 window.addEventListener('keypress', event => {
@@ -101,3 +86,11 @@ window.addEventListener('keypress', event => {
         startScreen.classList.remove('flex-center')
     }
 })
+
+soundConfigButton.addEventListener('click', handleSoundButtonClick)
+
+buttonsContainer.addEventListener('mouseover', handleMouseOver)
+buttonsContainer.addEventListener('mouseout', handleMouseOut)
+buttonsContainer.addEventListener('click', handleClick)
+
+initiateBoard()

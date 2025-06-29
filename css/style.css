@@ -57,33 +57,33 @@ body {
     scale: .97;
 }
 
-[data-state = "enabled"] {
+.button.button--pressed {
     box-shadow: 0px 0px .5em .15em rgba(0, 128, 0, .7);
 }
 
-[data-stage="0"] {
+.button.button--stage-0 {
     background-image: url(../assets/img/btn-stg-0.png);
 }
-[data-stage="1"] {
+.button.button--stage-1 {
     background-image: url(../assets/img/btn-stg-1.png);
 }
-[data-stage="2"] {
+.button.button--stage-2 {
     background-image: url(../assets/img/btn-stg-2.png);
 }
-[data-stage="3"] {
+.button.button--stage-3 {
     background-image: url(../assets/img/btn-stg-3.png);
 }
 
-[data-stage="0"]:hover {
+.button.button--stage-0:hover {
     background-image: url(../assets/img/btn-stg-0-hover.png);
 }
-[data-stage="1"]:hover {
+.button.button--stage-1:hover {
     background-image: url(../assets/img/btn-stg-1-hover.png);
 }
-[data-stage="2"]:hover {
+.button.button--stage-2:hover {
     background-image: url(../assets/img/btn-stg-2-hover.png);
 }
-[data-stage="3"]:hover {
+.button.button--stage-3:hover {
     background-image: url(../assets/img/btn-stg-3-hover.png);
 }
 
