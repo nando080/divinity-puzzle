@@ -3,6 +3,13 @@ const hoverAudio = document.querySelector('.button-hover-audio')
 
 const maxStage = 3
 
+const gameBoard = [
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0]
+]
+
 const winnerCombination = [
     [0, 2, 1, 2],
     [1, 2, 3, 1],
@@ -20,7 +27,7 @@ const generateButton = (row, column) => {
 }
 
 const fillButtonsContainer = () => {
-    winnerCombination.forEach((row, rowIndex) => {
+    gameBoard.forEach((row, rowIndex) => {
         row.forEach((_, columnIndex) => {
             buttonsContainer.appendChild(generateButton(rowIndex, columnIndex))
         })
@@ -31,15 +38,24 @@ const initiateBoard = () => {
     fillButtonsContainer()
 }
 
-const handleHover = event => {
-    if (event.target.dataset.stage) {
-        hoverAudio.play()
-    }
-    console.log(event)
+const playSound = sound => {
+    sound.play()
 }
 
-buttonsContainer.addEventListener('mouseover', handleHover)
+const handleMouseOver = event => {
+    const mouseTarget = event.target
+    const isAButton = mouseTarget.dataset.stage
+    if (isAButton) {
+        playSound(hoverAudio)
+    }
+}
+
+const handleMouseOut = () => playSound(hoverAudio)
+
+const handleClick = event => {}
+
+buttonsContainer.addEventListener('mouseover', handleMouseOver)
+buttonsContainer.addEventListener('mouseout', handleMouseOut)
+buttonsContainer.addEventListener('click', handleClick)
 
 initiateBoard()
-
-console.log(hoverAudio)
